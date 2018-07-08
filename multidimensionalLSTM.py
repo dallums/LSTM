@@ -16,7 +16,6 @@ from pandas import read_csv
 from pandas import DataFrame
 from pandas import concat
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error
 from keras.models import Sequential
 from keras.layers import Dense
@@ -180,7 +179,7 @@ def buildNetwork(_train_X, _test_X, _train_y, _test_y, _hours, _features,
 
     # design network
     model = Sequential()
-    model.add(LSTM(_hidden_nodes, input_shape=(_train_X.shape[1], _train_X.shape[2])))
+    model.add(LSTM(_hidden_nodes, input_shape=(_hours, _features))) # hours is time steps to lookback
     model.add(Dense(1))
     model.compile(loss='mae', optimizer='adam')
     
@@ -218,12 +217,12 @@ def buildNetwork(_train_X, _test_X, _train_y, _test_y, _hours, _features,
 
 if __name__ == '__main__':
     filename = 'PRSA_data_2010.1.1-2014.12.31.csv' # source filename
-    lookback = 1 # number of rows to lookback in time series
+    lookback = 10 # number of rows to lookback in time series
     lookforward = 1 # number of rows to lookforward in time series 
-    epochs = 10 # training epochs
+    epochs = 50 # training epochs
     hidden_nodes = 500
     batch_size = 72
-    train_percentage = .2 # percentage of data to train on
+    train_percentage = .3 # percentage of data to train on
     toDrop = 24 # initial rows to drop from dataframe
     x1 = 1000 # for plotting results - index to begin with in test set
     x2 = 1100 # for plotting results - index to end with in test set
